@@ -1,0 +1,50 @@
+# How to start using Terraform #
+
+# Step 1: Create the code in VSC
+provider "aws" {
+  region     = "us-east-1"
+  access_key = ""
+  secret_key = ""
+}
+
+resource "aws_instance" "my-first-server" {
+  ami           = "ami-0360c520857e3138f"
+  instance_type = "t3.micro"
+}
+
+# Step 2: Run code on VS Terminal
+terraform init -> plan -> apply
+
+# How to modify #
+# Step 3: Adding Name to Instance
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance.html
+resource "aws_instance" "my-first-server" {
+  ami           = "ami-0360c520857e3138f"
+  instance_type = "t3.micro"
+  tags = {
+    Name = "ubuntu"
+  }
+}
+
+# How to destroy instance #
+terraform destroy
+
+# How to create a VPC (use with provider from step 1)
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc.html
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "main"
+  }
+}
+
+# How to create subnet (use with how to create a VPC)
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet.html
+resource "aws_subnet" "main" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"
+
+  tags = {
+    Name = "Main"
+  }
+}
